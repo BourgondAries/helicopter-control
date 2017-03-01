@@ -16,7 +16,7 @@ A1 = [0   1   0       0;
       0   0   -K_2    0;
       0   0   0       1;
       0   0   -alpha1 -alpha2]*h + eye(4);
-B1 = [0   0   0       alpha1*0.2]';
+B1 = [0   0   0       alpha1]';
 
 % Number of states and inputs
 mx = size(A1,2); % Number of states (number of columns in A)
@@ -90,10 +90,11 @@ zero_padding = zeros(num_variables,1);
 unit_padding  = ones(num_variables,1);
 
 u   = [zero_padding; u; zero_padding];
-x1  = [pi*unit_padding; x1; zero_padding];
+x1  = [pi*unit_padding; x1; zero_padding] - pi;
 x2  = [zero_padding; x2; zero_padding];
 x3  = [zero_padding; x3; zero_padding];
 x4  = [zero_padding; x4; zero_padding];
+x = [x1 x2 x3 x4];
 
 %% Plotting
 t = 0:delta_t:delta_t*(length(u)-1);
@@ -115,4 +116,7 @@ subplot(515)
 plot(t,x4,'m',t,x4','mo'),grid
 xlabel('tid (s)'),ylabel('pdot')
 
-u = [linspace(0,35,size(u,1))' u];
+seconds = (N+2*num_variables)*delta_t;
+u = [linspace(0,seconds,size(u,1))' u];
+x = [linspace(0,seconds,size(x,1))' x];
+compute_lq
