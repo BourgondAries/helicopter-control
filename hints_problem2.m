@@ -3,10 +3,10 @@
 % Updated spring 2017, Andreas L. Fl?ten
 
 %% Initialization and model definition
-init03; % NB: Change this to the init file corresponding to your helicopter
+init07; % NB: Change this to the init file corresponding to your helicopter
 delta_t = 0.25; % sampling time
 h = delta_t;
-q = 1;
+q = 0.1;
 
 alpha1 = K_1*K_pp;
 alpha2 = K_1*K_pd;
@@ -16,7 +16,7 @@ A1 = [0   1   0       0;
       0   0   -K_2    0;
       0   0   0       1;
       0   0   -alpha1 -alpha2]*h + eye(4);
-B1 = [0   0   0       alpha1]';
+B1 = [0   0   0       alpha1*0.2]';
 
 % Number of states and inputs
 mx = size(A1,2); % Number of states (number of columns in A)
@@ -114,3 +114,5 @@ ylabel('p')
 subplot(515)
 plot(t,x4,'m',t,x4','mo'),grid
 xlabel('tid (s)'),ylabel('pdot')
+
+u = [linspace(0,35,size(u,1))' u];
