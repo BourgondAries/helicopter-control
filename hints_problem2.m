@@ -6,7 +6,7 @@
 init03; % NB: Change this to the init file corresponding to your helicopter
 delta_t = 0.25; % sampling time
 h = delta_t;
-q = 10;
+q = 1;
 
 alpha1 = K_1*K_pp;
 alpha2 = K_1*K_pd;
@@ -98,9 +98,9 @@ x4  = [zero_padding; x4; zero_padding];
 %% Plotting
 t = 0:delta_t:delta_t*(length(u)-1);
 
-figure(2)
 subplot(511)
 stairs(t,u),grid
+title(['q=' num2str(q)]);
 ylabel('u')
 subplot(512)
 plot(t,x1,'m',t,x1,'mo'),grid
