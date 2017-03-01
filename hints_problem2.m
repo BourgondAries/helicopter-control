@@ -4,7 +4,7 @@
 
 %% Initialization and model definition
 init07; % NB: Change this to the init file corresponding to your helicopter
-delta_t	= 0.25; % sampling time
+delta_t = 0.25; % sampling time
 h = delta_t;
 q = 0.1;
 
@@ -12,10 +12,10 @@ alpha1 = K_1*K_pp;
 alpha2 = K_1*K_pd;
 
 % Discrete time system model. x = [lambda r p p_dot]'
-A1 = [1/h 1   0       0;
-      0   1/h -K_2    0;
-      0   0   1/h     0;
-      0   0   -alpha1 1/h-alpha2];
+A1 = [0   1   0       0;
+      0   0   -K_2    0;
+      0   0   0       1;
+      0   0   -alpha1 -alpha2]*h + eye(4);
 B1 = [0   0   0       alpha1]';
 
 % Number of states and inputs
