@@ -3,10 +3,10 @@
 % Updated spring 2017, Andreas L. Fl?ten
 
 %% Initialization and model definition
-init07; % NB: Change this to the init file corresponding to your helicopter
+init03; % NB: Change this to the init file corresponding to your helicopter
 delta_t = 0.25; % sampling time
 h = delta_t;
-q = 0.1;
+q = 10;
 
 alpha1 = K_1*K_pp;
 alpha2 = K_1*K_pd;
@@ -55,7 +55,7 @@ Q1(1,1) = 1;                            % Weight on state x1
 Q1(2,2) = 0;                            % Weight on state x2
 Q1(3,3) = 0;                            % Weight on state x3
 Q1(4,4) = 0;                            % Weight on state x4
-P1 = 0;                                 % Weight on input
+P1 = q;                                 % Weight on input
 Q = 2*genq2(Q1,P1,N,M,mu);              % Generate Q
 c = zeros(N*mx+M*mu,1);                 % Generate c
 
