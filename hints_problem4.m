@@ -6,34 +6,44 @@
 init07; % NB: Change this to the init file corresponding to your helicopter
 delta_t = 0.25; % sampling time
 h = delta_t;
-q = 1;
+q1 = 1;
+q2 = 1;
+
+%G = [kron(eye(N),[1 0 0 0 0 0]) kron(eye(N),[q1 q2])];
+
 
 alpha1 = K_1*K_pp;
 alpha2 = K_1*K_pd;
 
 % Discrete time system model. x = [lambda r p p_dot]'
-A1 = [0   1   0       0;
-      0   0   -K_2    0;
-      0   0   0       1;
-      0   0   -alpha1 -alpha2]*h + eye(4);
-B1 = [0   0   0       alpha1]'*h;
+A1 = [0   1   0       0        0         0;
+      0   0   -K_2    0        0         0;
+      0   0   0       1        0         0;
+      0   0   -alpha1 -alpha2  0         0;
+      0   0   0       0        0         1;
+      0   0   0       0        -K_3*K_ep -K_3*K_ed]*h + eye(6);
+B1 = [0   0   0       alpha1   0         0;
+      0   0   0       0        0         K_3*K_ep]'*h;
 
 % Number of states and inputs
 mx = size(A1,2); % Number of states (number of columns in A)
 mu = size(B1,2); % Number of inputs(number of columns in B)
+
+% Time horizon and initialization
+N  = 15;                                % Time horizon for states
+M  = N;                                 % Time horizon for inputs
+z  = zeros(N*mx+M*mu,1);                % Initialize z for the whole horizon
+z0 = z;                                 % Initial value for optimization
 
 % Initial values
 x1_0 = pi;                              % Lambda
 x2_0 = 0;                               % r
 x3_0 = 0;                               % p
 x4_0 = 0;                               % p_dot
-x0 = [x1_0 x2_0 x3_0 x4_0]';          % Initial values
+x5_0 = 0;                               % e
+x6_0 = 0;                               % e_dot
+x0 = [x1_0 x2_0 x3_0 x4_0 x5_0 x6_0]'; % Initial values
 
-% Time horizon and initialization
-N  = 100;                               % Time horizon for states
-M  = N;                                 % Time horizon for inputs
-z  = zeros(N*mx+M*mu,1);                % Initialize z for the whole horizon
-z0 = z;                                 % Initial value for optimization
 
 % Bounds
 ul      = -30*pi/180;                   % Lower bound on control -- u1
@@ -55,9 +65,13 @@ Q1(1,1) = 1;                            % Weight on state x1
 Q1(2,2) = 0;                            % Weight on state x2
 Q1(3,3) = 0;                            % Weight on state x3
 Q1(4,4) = 0;                            % Weight on state x4
-P1 = q;                                 % Weight on input
-Q = 2*genq2(Q1,P1,N,M,mu);              % Generate Q
+Q1(5,5) = 0;                            % Weight on state x5
+Q1(6,6) = 0;                            % Weight on state x6
+P1 = diag(q1, q2);                                 % Weight on input
+Q = genq2(Q1,P1,N,M,mu);              % Generate Q
 c = zeros(N*mx+M*mu,1);                 % Generate c
+
+fun = @(x) x'*Q*x;
 
 %% Generate system matrixes for linear model
 Aeq = gena2(A1,B1,N,mx,mu);           % Generate A, hint: gena2
@@ -66,7 +80,8 @@ beq(1:mx) = A1*x0; % Initial value
 
 %% Solve QP problem with linear model
 tic
-[z,lambda] = quadprog(Q,c,[],[],Aeq,beq,vlb,vub); % hint: quadprog
+z = fmincon(fun,z0,[],[],Aeq,beq,vlb,vub,@nonlcon);
+% [z,lambda] = quadprog(Q,c,[],[],Aeq,beq,vlb,vub); % hint: quadprog
 t1=toc;
 
 % Calculate objective value
@@ -101,7 +116,7 @@ t = 0:delta_t:delta_t*(length(u)-1);
 
 subplot(511)
 stairs(t,u),grid
-title(['q=' num2str(q)]);
+title(['q1=' num2str(q1)]);
 ylabel('u')
 subplot(512)
 plot(t,x1,'m',t,x1,'mo'),grid
