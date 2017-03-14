@@ -6,7 +6,7 @@
 init07; % NB: Change this to the init file corresponding to your helicopter
 delta_t = 0.25; % sampling time
 h = delta_t;
-q = 1;
+q = 0.1;
 
 alpha1 = K_1*K_pp;
 alpha2 = K_1*K_pd;
