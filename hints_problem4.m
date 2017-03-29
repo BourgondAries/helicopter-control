@@ -65,10 +65,10 @@ Q1(1,1) = 1;                            % Weight on state x1
 Q1(2,2) = 0;                            % Weight on state x2
 Q1(3,3) = 0;                            % Weight on state x3
 Q1(4,4) = 0;                            % Weight on state x4
-Q1(5,5) = 0;                            % Weight on state x5
+Q1(5,5) = 1;                            % Weight on state x5
 Q1(6,6) = 0;                            % Weight on state x6
-P1 = diag(q1, q2);                                 % Weight on input
-Q = genq2(Q1,P1,N,M,mu);              % Generate Q
+P1 = diag(q1, q2);                      % Weight on input
+Q = genq2(Q1,P1,N,M,mu);                % Generate Q
 c = zeros(N*mx+M*mu,1);                 % Generate c
 
 fun = @(x) x'*Q*x;
@@ -93,23 +93,29 @@ for i=1:N*mx+M*mu
 end
 
 %% Extract control inputs and states
-u  = [z(N*mx+1:N*mx+M*mu);z(N*mx+M*mu)]; % Control input from solution
+u1  = [z(N*mx+1:2:N*mx+M*mu-1);z(N*mx+M*mu-1)]; % Control input from solution
+u2  = [z(N*mx+2:2:N*mx+M*mu);z(N*mx+M*mu)]; % Control input from solution
 
 x1 = [x0(1);z(1:mx:N*mx)];              % State x1 from solution
 x2 = [x0(2);z(2:mx:N*mx)];              % State x2 from solution
 x3 = [x0(3);z(3:mx:N*mx)];              % State x3 from solution
 x4 = [x0(4);z(4:mx:N*mx)];              % State x4 from solution
+x5 = [x0(5);z(5:mx:N*mx)];              % State x5 from solution
+x6 = [x0(6);z(6:mx:N*mx)];              % State x6 from solution
 
 num_variables = 5/delta_t;
 zero_padding = zeros(num_variables,1);
 unit_padding  = ones(num_variables,1);
 
-u   = [zero_padding; u; zero_padding];
+u1   = [zero_padding; u(:, 1); zero_padding];
+u2   = [zero_padding; u(:, 2); zero_padding];
 x1  = [pi*unit_padding; x1; zero_padding] - pi;
 x2  = [zero_padding; x2; zero_padding];
 x3  = [zero_padding; x3; zero_padding];
 x4  = [zero_padding; x4; zero_padding];
-x = [x1 x2 x3 x4];
+x5  = [zero_padding; x5; zero_padding];
+x6  = [zero_padding; x6; zero_padding];
+x = [x1 x2 x3 x4 x5 x6];
 
 %% Plotting
 t = 0:delta_t:delta_t*(length(u)-1);
