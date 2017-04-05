@@ -67,7 +67,7 @@ Q1(3,3) = 0;                            % Weight on state x3
 Q1(4,4) = 0;                            % Weight on state x4
 Q1(5,5) = 1;                            % Weight on state x5
 Q1(6,6) = 0;                            % Weight on state x6
-P1 = diag(q1, q2);                      % Weight on input
+P1 = diag([q1, q2]);                      % Weight on input
 Q = genq2(Q1,P1,N,M,mu);                % Generate Q
 c = zeros(N*mx+M*mu,1);                 % Generate c
 
@@ -107,8 +107,8 @@ num_variables = 5/delta_t;
 zero_padding = zeros(num_variables,1);
 unit_padding  = ones(num_variables,1);
 
-u1   = [zero_padding; u(:, 1); zero_padding];
-u2   = [zero_padding; u(:, 2); zero_padding];
+u1   = [zero_padding; u1; zero_padding];
+u2   = [zero_padding; u2; zero_padding];
 x1  = [pi*unit_padding; x1; zero_padding] - pi;
 x2  = [zero_padding; x2; zero_padding];
 x3  = [zero_padding; x3; zero_padding];
@@ -118,26 +118,34 @@ x6  = [zero_padding; x6; zero_padding];
 x = [x1 x2 x3 x4 x5 x6];
 
 %% Plotting
-t = 0:delta_t:delta_t*(length(u)-1);
+t = 0:delta_t:delta_t*(length(u1)-1);
 
-subplot(511)
-stairs(t,u),grid
+subplot(711)
+stairs(t,u1),grid
 title(['q1=' num2str(q1)]);
 ylabel('u')
-subplot(512)
+subplot(712)
 plot(t,x1,'m',t,x1,'mo'),grid
 ylabel('lambda')
-subplot(513)
+subplot(713)
 plot(t,x2,'m',t,x2','mo'),grid
 ylabel('r')
-subplot(514)
+subplot(714)
 plot(t,x3,'m',t,x3,'mo'),grid
 ylabel('p')
-subplot(515)
+subplot(715)
 plot(t,x4,'m',t,x4','mo'),grid
 xlabel('tid (s)'),ylabel('pdot')
+subplot(716)
+plot(t,x5,'m',t,x5','mo'),grid
+xlabel('tid (s)'),ylabel('e')
+subplot(717)
+plot(t,x6,'m',t,x6','mo'),grid
+xlabel('tid (s)'),ylabel('e_dot')
+figure;
+stairs(t,u2),grid
 
 seconds = (N+2*num_variables)*delta_t;
-u = [linspace(0,seconds,size(u,1))' u];
+u1 = [linspace(0,seconds,size(u2,1))' u1];
+u2 = [linspace(0,seconds,size(u2,1))' u2];
 x = [linspace(0,seconds,size(x,1))' x];
-compute_lq
