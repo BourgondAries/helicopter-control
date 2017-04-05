@@ -30,7 +30,7 @@ mx = size(A1,2); % Number of states (number of columns in A)
 mu = size(B1,2); % Number of inputs(number of columns in B)
 
 % Time horizon and initialization
-N  = 15;                                % Time horizon for states
+N  = 40;                                % Time horizon for states
 M  = N;                                 % Time horizon for inputs
 z  = zeros(N*mx+M*mu,1);                % Initialize z for the whole horizon
 z0 = z;                                 % Initial value for optimization
@@ -53,6 +53,8 @@ xl      = -Inf*ones(mx,1);              % Lower bound on states (no bound)
 xu      = Inf*ones(mx,1);               % Upper bound on states (no bound)
 xl(3)   = ul;                           % Lower bound on state x3
 xu(3)   = uu;                           % Upper bound on state x3
+xl(5) = uu;
+xu(5) = uu;
 
 % Generate constraints on measurements and inputs
 [vlb,vub]       = genbegr2(N,M,xl,xu,ul,uu); % hint: genbegr2
