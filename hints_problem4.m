@@ -9,9 +9,6 @@ h = delta_t;
 q1 = 1;
 q2 = 1;
 
-%G = [kron(eye(N),[1 0 0 0 0 0]) kron(eye(N),[q1 q2])];
-
-
 alpha1 = K_1*K_pp;
 alpha2 = K_1*K_pd;
 
@@ -26,8 +23,8 @@ B1 = [0   0   0       alpha1   0         0;
       0   0   0       0        0         K_3*K_ep]'*h;
 
 % Number of states and inputs
-mx = size(A1,2); % Number of states (number of columns in A)
-mu = size(B1,2); % Number of inputs(number of columns in B)
+mx = size(A1,2);                        % Number of states (number of columns in A)
+mu = size(B1,2);                        % Number of inputs (number of columns in B)
 
 % Time horizon and initialization
 N  = 40;                                % Time horizon for states
@@ -42,7 +39,7 @@ x3_0 = 0;                               % p
 x4_0 = 0;                               % p_dot
 x5_0 = 0;                               % e
 x6_0 = 0;                               % e_dot
-x0 = [x1_0 x2_0 x3_0 x4_0 x5_0 x6_0]'; % Initial values
+x0 = [x1_0 x2_0 x3_0 x4_0 x5_0 x6_0]';  % Initial values
 
 
 % Bounds
@@ -53,13 +50,13 @@ xl      = -Inf*ones(mx,1);              % Lower bound on states (no bound)
 xu      = Inf*ones(mx,1);               % Upper bound on states (no bound)
 xl(3)   = ul;                           % Lower bound on state x3
 xu(3)   = uu;                           % Upper bound on state x3
-xl(5) = uu;
-xu(5) = uu;
 
 % Generate constraints on measurements and inputs
 [vlb,vub]       = genbegr2(N,M,xl,xu,ul,uu); % hint: genbegr2
 vlb(N*mx+M*mu)  = 0;                    % We want the last input to be zero
 vub(N*mx+M*mu)  = 0;                    % We want the last input to be zero
+vlb(N*mx+M*mu-1)  = 0;                  % We want the last input to be zero
+vub(N*mx+M*mu-1)  = 0;                  % We want the last input to be zero
 
 % Generate the matrix Q and the vector c (objecitve function weights in the QP problem)
 Q1 = zeros(mx,mx);
@@ -67,9 +64,9 @@ Q1(1,1) = 1;                            % Weight on state x1
 Q1(2,2) = 0;                            % Weight on state x2
 Q1(3,3) = 0;                            % Weight on state x3
 Q1(4,4) = 0;                            % Weight on state x4
-Q1(5,5) = 1;                            % Weight on state x5
+Q1(5,5) = 0;                            % Weight on state x5
 Q1(6,6) = 0;                            % Weight on state x6
-P1 = diag([q1, q2]);                      % Weight on input
+P1 = diag([q1, q2]);                    % Weight on input
 Q = genq2(Q1,P1,N,M,mu);                % Generate Q
 c = zeros(N*mx+M*mu,1);                 % Generate c
 
@@ -81,7 +78,7 @@ beq = zeros(mx*N,1);        	  % Generate b
 beq(1:mx) = A1*x0; % Initial value
 
 %% Solve QP problem with linear model
-tic
+tic;
 z = fmincon(fun,z0,[],[],Aeq,beq,vlb,vub,@nonlcon);
 % [z,lambda] = quadprog(Q,c,[],[],Aeq,beq,vlb,vub); % hint: quadprog
 t1=toc;
@@ -148,6 +145,9 @@ figure;
 stairs(t,u2),grid
 
 seconds = (N+2*num_variables)*delta_t;
+u = [linspace(0,seconds,size(u2,1))' u1 u2];
 u1 = [linspace(0,seconds,size(u2,1))' u1];
 u2 = [linspace(0,seconds,size(u2,1))' u2];
 x = [linspace(0,seconds,size(x,1))' x];
+
+compute_lq4;
