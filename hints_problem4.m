@@ -27,7 +27,7 @@ mx = size(A1,2);                        % Number of states (number of columns in
 mu = size(B1,2);                        % Number of inputs (number of columns in B)
 
 % Time horizon and initialization
-N  = 40;                                % Time horizon for states
+N  = 80;                                % Time horizon for states
 M  = N;                                 % Time horizon for inputs
 z  = zeros(N*mx+M*mu,1);                % Initialize z for the whole horizon
 z0 = z;                                 % Initial value for optimization
