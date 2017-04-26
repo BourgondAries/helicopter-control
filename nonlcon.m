@@ -1,7 +1,10 @@
 function [c, ceq] = nonlcon(x)
-	a = 0.2;
-	b = 20;
-	lambda_t = 2*pi/3;
-	c = a*exp(-b*(x(1)-lambda_t)^2)-x(5);
-	ceq = [];
-end
+N = 100;
+mx = 6;
+M = N;
+mu = 2;
+a = 0.2;
+b = 20;
+lambda_t = 2*pi/3;
+c = a.*exp(1).^(-b*(x(1:mx:N*mx)-lambda_t).^2)-x(5:mx:N*mx);
+ceq = [];
