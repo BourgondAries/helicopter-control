@@ -1,10 +1,5 @@
-% TTK4135 - Helicopter lab
-% Hints/template for problem 2.
-% Updated spring 2017, Andreas L. Fl?ten
-
-%% Initialization and model definition
-init07; % NB: Change this to the init file corresponding to your helicopter
-delta_t = 0.25; % sampling time
+init04;
+delta_t = 0.25;
 h = delta_t;
 q1 = 1;
 q2 = 1;
@@ -78,7 +73,7 @@ beq = zeros(mx*N,1);        	  % Generate b
 beq(1:mx) = A1*x0; % Initial value
 
 %% Solve QP problem with linear model
-options = optimoptions(@fmincon,'MaxIter',27000,'MaxFunEvals',270000);
+options = optimoptions(@fmincon,'MaxIter',27000,'MaxFunEvals',27000);
 tic;
 z = fmincon(fun,z0,[],[],Aeq,beq,vlb,vub,@nonlcon,options);
 % [z,lambda] = quadprog(Q,c,[],[],Aeq,beq,vlb,vub); % hint: quadprog
@@ -120,6 +115,7 @@ x = [x1 x2 x3 x4 x5 x6];
 %% Plotting
 t = 0:delta_t:delta_t*(length(u1)-1);
 
+figure('units','normalized','outerposition',[0 0 1 1]);
 subplot(711)
 stairs(t,u1),grid
 title(['q1=' num2str(q1)]);
@@ -142,8 +138,10 @@ xlabel('tid (s)'),ylabel('e')
 subplot(717)
 plot(t,x6,'m',t,x6','mo'),grid
 xlabel('tid (s)'),ylabel('e_dot')
-figure;
+print(strcat('figures/10.4.3.q_', num2str(q), '.theory.eps'), '-depsc');
+figure('units','normalized','outerposition',[0 0 1 1]);
 stairs(t,u2),grid
+print(strcat('figures/10.4.3.u_q_', num2str(q), '.theory.eps'), '-depsc');
 
 seconds = (N+2*num_variables)*delta_t;
 u = [linspace(0,seconds,size(u2,1))' u1 u2];

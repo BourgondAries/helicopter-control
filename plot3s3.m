@@ -15,4 +15,4 @@ subplot(3,2,[5 6]);
 plot(u(:,1), u(:,2));
 title('u');
 xlabel(strcat('time, q=', num2str(q)));
-print(strcat('figures/10.2.3.q_', num2str(q)), '-depsc');
+print(strcat('figures/10.3.3.q_', num2str(q)), '-depsc');
