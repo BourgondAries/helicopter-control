@@ -109,6 +109,9 @@ Where
 \vec{B} = h\vec{B_c}
 \end{equation}
 
+This defines the discrete time state space form.
+
+
 \subsection{Calculate an Optimal Trajectory}
 %  Calculate an optimal trajectory for moving the helicopter from x 0 = λ 0 0 0 0 to x f = λ f 0 0 0 when the elevation angle is assumed to be constant. Use λ 0 = π and λ f = 0. Also implement the constraint 30π |p k | ≤ , k ∈ {1, . . . , N } [14] 180 Since the manipulated variable p c in this case is the setpoint for the p controller, the constraint should also be implemented for the manipu- lated variable. We want to minimize the cost function N [λ i − λ f ] 2 + qp 2 ci , φ = q ≥ 0 [15] i=1 Solve the optimization problem using the MATLAB function quad- prog. Try using the values 0.1, 1, and 10 as weights q. Plot the manipulated variable and the output. Comment the results with re- spect to the different weights chosen. Remember that some useful files are posted on Blackboard. Use a sampling time of 0.25 s and N = 100.  15Furthermore, discuss the objective function [15], in particular the term [λ i − λ f ] 2 . For instance, could any unwanted effects arise from steer- ing the helicopter to λ = λ f with this objective function?
 We encode the equality constraint using \ref{mat:eq}, this gives us a constraint where we have a matrix of the form
@@ -145,6 +148,8 @@ The objective function collapses into just
 
 $$ \sum_{i=1}^N \lambda_i^2 + qp_{ci}^2 $$
 
+% Furthermore, discuss the objective function [15], in particular the term [λ i − λ f ] 2 . For instance, could any unwanted effects arise from steer- ing the helicopter to λ = λ f with this objective function?
+
 when $ \lambda_f = 0 $. This term is not scaled (except for unit scaling) such that we can fully control the objective function by exploiting $ q $. An unwanted effect could be overshoot, since a high q is more keen on keep $ p_{ci} $.
 
 \includegraphics{{figures/10.2.3.q_0.1}.eps}
@@ -162,7 +167,8 @@ when $ \lambda_f = 0 $. This term is not scaled (except for unit scaling) such t
 
 We implemented this optimal control sequence on the test helicopters and observed noticeable deviation from the desired final position. This is due to lack of feedback to account for physical disturbances, modeling inconsistencies and linearizion errors.
 
-We see from the following figure that the travel is reversed by the input variable.
+% Does the helicopter end in the desired point x f ? What causes the observed deviation?
+The helicopter does not end in the desired point because there's significant clockwise bias when the helicopter is left with a zero pitch input.
 
 \includegraphics{{figures/10.2.3.q_1}.eps}
 
@@ -170,13 +176,16 @@ We see from the following figure that the travel is reversed by the input variab
 
 \subsection{LQ Control}
 % In MATLAB you can use the function dlqr to calculate the optimal K matrix. Q and R indicates how much you want to penalize deviation in the states, and how much you want to penalize use of the manipulated variable. Use diagonal matrices for Q and R. A diagonal matrix is easily made in MATLAB using the function diag.
-Feedback in the optimal controller:
+Feedback $k$ is computed using the following script:
 
 \lstinputlisting[language=Matlab]{compute_lq.m}
+
+This script uses $A1$ and $B1$ which are defined in the PROBLEM2FILE.
 
 \subsection{Simulink Feedback}
 % Implement the feedback on the helicopter and run the helicopter. This is done in Simulink using the following blocks Mux, Demux, Matrix 17Multiplication, Sum, and “From Workspace”. Notice that the “From Workspace” block can import several values [a vector], meaning only one block is required for x.
 Please see the model (REFERENCE HERE).
+INSERT HERE!!!!!!!
 
 \subsection{MPC Controller}
 % An alternative strategy would be to use an MPC controller. How would you realize this controller?
@@ -281,7 +290,7 @@ Yielding new matrices for the discrete case:
 \end{bmatrix}
 \end{equation}
 
-Where $T$ is the time step.
+Where $T$ is the time step, the above equations define the discrete state space form.
 
 \subsection{SQP Algorithm}
 Nothing here
