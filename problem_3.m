@@ -112,7 +112,7 @@ ylabel('p')
 subplot(515)
 plot(t,x4,'m',t,x4','mo'),grid
 xlabel('tid (s)'),ylabel('pdot')
-print(strcat('figures/10.2.3.q_', num2str(q), '.theory.eps'), '-depsc');
+print(strcat('figures/10.3.3.q_', num2str(q), '.theory.eps'), '-depsc');
 
 seconds = (N+2*num_variables)*delta_t;
 u = [linspace(0,seconds,size(u,1))' u];
