@@ -78,8 +78,9 @@ beq = zeros(mx*N,1);        	  % Generate b
 beq(1:mx) = A1*x0; % Initial value
 
 %% Solve QP problem with linear model
+options = optimoptions(@fmincon,'MaxIter',27000,'MaxFunEvals',270000);
 tic;
-z = fmincon(fun,z0,[],[],Aeq,beq,vlb,vub,@nonlcon);
+z = fmincon(fun,z0,[],[],Aeq,beq,vlb,vub,@nonlcon,options);
 % [z,lambda] = quadprog(Q,c,[],[],Aeq,beq,vlb,vub); % hint: quadprog
 t1=toc;
 
@@ -106,8 +107,8 @@ num_variables = 5/delta_t;
 zero_padding = zeros(num_variables,1);
 unit_padding  = ones(num_variables,1);
 
-u1   = [zero_padding; u1; zero_padding];
-u2   = [zero_padding; u2; zero_padding];
+u1  = [zero_padding; u1; zero_padding];
+u2  = [zero_padding; u2; zero_padding];
 x1  = [pi*unit_padding; x1; zero_padding] - pi;
 x2  = [zero_padding; x2; zero_padding];
 x3  = [zero_padding; x3; zero_padding];
