@@ -1,13 +1,13 @@
 \newcommand{\texMacro}[2]{\texttt{\textbackslash{#1}\{#2\}}}
 % \section{General LaTeX tips}\label{sec:latex_tips}
 % Some tips were given in \Cref{sec:intro}, and this section will elaborate with some more concrete examples.
-\section{Optimal Control of Pitch/Travel without Feedback}\label{sec:latex_tips}
+\section{Optimal Control of Pitch/Travel without Feedback}
 
 \subsection{Continuous State Space Form}
 % Write the model on continuous time state space form
-First we must formulate the model (\ref{eq:model}) in a continuous state-space form. Elevation is neglected here.
+First we must formulate the model (\Cref{eq:model}) in a continuous state-space form. Elevation is neglected here.
 
-The equation for elevation (\ref{eq:model_se_elev}) is completely removed from the model (\ref{eq:model}) and we are left with the following set of equations.
+The equation for elevation (\Cref{eq:model_se_elev}) is completely removed from the model (\Cref{eq:model}) and we are left with the following set of equations.
 
 \begin{subequations}
 	\begin{align}
@@ -23,30 +23,30 @@ Since $ \vec{x} = [\lambda\ r\ p\ \dot{p}]^T $, and $ u = p_c $ we can formulate
 	\ddot{p} = [0\ 0\ -K_1K_{pp}\ -K_1K_{pd}]^T \vec{x} + [K_1K_{pp}]^T u
 \end{equation}
 
-We can get the change in $ p $ as:
+The change in $ p $ as:
 
 \begin{equation}
 \dot{p} = [0\ 0\ 0\ 1]^T \vec{x} + [0]^T u
 \end{equation}
 
-Likewise for $ r $:
+likewise for $ r $:
 \begin{equation}
 	\dot{r} = [0\ 0\ -K_2\ 0]^T \vec{x} + [0]^T u
 \end{equation}
-and finally for $\lambda$:
+and finally $\lambda$:
 \begin{equation}
 	\dot{\lambda} = [0\ 1\ 0\ 0]^T \vec{x} + [0]^T u
 \end{equation}
 
-Using the formulas that were given we were able to construct a state-space model of form in (\ref{eq:state-space}).
+Using the formulas that were given we construct a state-space model of form in (\Cref{eq:state-space}).
 \begin{equation}\label{eq:state-space}
 	\vec{\dot{x}} = A_c \vec{x} + \vec{B_c} u
 \end{equation}
 
 \begin{subequations}
 \begin{align}
-\alpha_1 = K_1K_{pp} \\
-\alpha_2 = K_1K_{pd} \\
+\alpha_1 \vcentcolon= K_1K_{pp} \\
+\alpha_2 \vcentcolon= K_1K_{pd} \\
 A_c =
 \begin{bmatrix}
     0 & 1 & 0 & 0 \\
@@ -114,7 +114,7 @@ This defines the discrete time state space form.
 
 \subsection{Calculate an Optimal Trajectory}
 %  Calculate an optimal trajectory for moving the helicopter from x 0 = λ 0 0 0 0 to x f = λ f 0 0 0 when the elevation angle is assumed to be constant. Use λ 0 = π and λ f = 0. Also implement the constraint 30π |p k | ≤ , k ∈ {1, . . . , N } [14] 180 Since the manipulated variable p c in this case is the setpoint for the p controller, the constraint should also be implemented for the manipu- lated variable. We want to minimize the cost function N [λ i − λ f ] 2 + qp 2 ci , φ = q ≥ 0 [15] i=1 Solve the optimization problem using the MATLAB function quad- prog. Try using the values 0.1, 1, and 10 as weights q. Plot the manipulated variable and the output. Comment the results with re- spect to the different weights chosen. Remember that some useful files are posted on Blackboard. Use a sampling time of 0.25 s and N = 100.  15Furthermore, discuss the objective function [15], in particular the term [λ i − λ f ] 2 . For instance, could any unwanted effects arise from steer- ing the helicopter to λ = λ f with this objective function?
-We encode the equality constraint using \ref{mat:eq}, this gives us a constraint where we have a matrix of the form
+We encode the equality constraint using \Cref{mat:eq}, this gives us a constraint where we have a matrix of the form
 \begin{equation}
 A_{eq} =
 \begin{bmatrix}
@@ -144,48 +144,82 @@ The graphs with the circles are theoretical and the one with only blue line grap
 
 One can observe that setting $ q = 0.1 $ does not particularly affect travel rate in practice, but setting $ q = 10 $ affects travel rate significantly.
 
-The objective function collapses into just
+The objective function can be collapsed into:
 
 $$ \sum_{i=1}^N \lambda_i^2 + qp_{ci}^2 $$
 
 % Furthermore, discuss the objective function [15], in particular the term [λ i − λ f ] 2 . For instance, could any unwanted effects arise from steer- ing the helicopter to λ = λ f with this objective function?
 
-when $ \lambda_f = 0 $. This term is not scaled (except for unit scaling) such that we can fully control the objective function by exploiting $ q $. An unwanted effect could be overshoot, since a high q is more keen on keep $ p_{ci} $.
+when $ \lambda_f = 0 $. This term is not scaled (except for unit scaling) such that we can fully control the objective function by exploiting $ q $. An unwanted effect could be overshoot, since a high $ q $ implies $ p_{ci} $ taking priority over $ \lambda_i $.
 
-\includegraphics{{figures/10.2.3.q_0.1}.eps}
-\includegraphics{{figures/10.2.3.q_0.1.theory}.eps}
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/10.2.3.q_0.1.theory}.eps}
+\caption{Theoretical rates from the physical helicopter (q = 0.1)}
+\label{fig:10.2.3.q_0.1.theory}
+\end{figure}
 
-\includegraphics{{figures/10.2.3.q_1}.eps}
-\includegraphics{{figures/10.2.3.q_1.theory}.eps}
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/10.2.3.q_0.1}.eps}
+\caption{Actual rates from the physical helicopter (q = 0.1)}
+\label{fig:10.2.3.q_0.1}
+\end{figure}
 
 
-\includegraphics{{figures/10.2.3.q_10}.eps}
-\includegraphics{{figures/10.2.3.q_10.theory}.eps}
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/10.2.3.q_1.theory}.eps}
+\caption{Theoretical rates from the physical helicopter (q = 1)}
+\label{fig:10.2.3.q_10.theory}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/10.2.3.q_1}.eps}
+\caption{Actual rates from the physical helicopter (q = 1)}
+\label{fig:10.2.3.q_1}
+\end{figure}
+
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/10.2.3.q_10.theory}.eps}
+\caption{Theoretical rates from the physical helicopter (q = 10)}
+\label{fig:10.2.3.q_10.theory}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/10.2.3.q_10}.eps}
+\caption{Actual rates from the physical helicopter (q = 10)}
+\label{fig:10.2.3.q_10}
+\end{figure}
 
 \subsection{Offset}
 % The specific implementation of the QP algorithm used here can only weight deviations from origin [λ f = 0]. The position sensors on the helicopter are relative, which means that the position is reset to zero each time the helicopter is started. To get the helicopter to start in x 0 you have to add a suitable value to the measurement. For example, you can subtract 30 ◦ from the elevation measurement to get the helicopter to fly at a reasonable height when e c = 0 [this is done in the given file]. Implement the input sequence generated in c] with q = 1.  The optimization in c] gives the manipulated variable u. It may be a good idea to add some zeros at the beginning of the input vector, so that the helicopter has time to stabilize in x 0 before the calculated sequence is implemented. Also, adding zeros at the end of the vector is recommended to keep the helicopter stable after the input sequence is over. Add enough zeros to keep the helicopter stable for at least 5 s before and after the optimal input sequence is implemented. The easiest way to transfer the input sequence to Simulink is to use a “From Workspace” block [which can be found under “Sources” in the Library Browser]. This block imports two vectors, a vector u which is connected to the output and a time vector t which determines when the different elements of u should be transfered to the output.  Does the helicopter end in the desired point x f ? What causes the observed deviation?
 
-We implemented this optimal control sequence on the test helicopters and observed noticeable deviation from the desired final position. This is due to lack of feedback to account for physical disturbances, modeling inconsistencies and linearizion errors.
+We implemented this optimal control sequence on the test helicopters and observed noticable deviation from the desired final position. This is due to lack of feedback to account for physical disturbances, modeling inconsistencies and linearizion errors.
 
 % Does the helicopter end in the desired point x f ? What causes the observed deviation?
-The helicopter does not end in the desired point because there's significant clockwise bias when the helicopter is left with a zero pitch input.
-
-\includegraphics{{figures/10.2.3.q_1}.eps}
+The helicopter does not end in the desired point because there's significant clockwise bias when the helicopter is left with a zero input.
 
 \section{Optimal Control of Pitch/Travel with Feedback (LQ)}
 
 \subsection{LQ Control}
 % In MATLAB you can use the function dlqr to calculate the optimal K matrix. Q and R indicates how much you want to penalize deviation in the states, and how much you want to penalize use of the manipulated variable. Use diagonal matrices for Q and R. A diagonal matrix is easily made in MATLAB using the function diag.
-Feedback $k$ is computed using the following script:
+Feedback $k$ is computed using \Cref{lst:compute_lq}.
 
-\lstinputlisting[language=Matlab]{compute_lq.m}
+\lstinputlisting[language=Matlab,caption={Script for computing the LQ k gain},label=lst:compute_lq]{../compute_lq.m}
 
-This script uses $A1$ and $B1$ which are defined in the PROBLEM2FILE.
+This script uses $A1$ and $B1$ which are defined in \Cref{lst:problem_2}.
+
+\lstinputlisting[language=Matlab,caption={Problem 2 code},label=lst:problem_2]{../problem_2.m}
 
 \subsection{Simulink Feedback}
 % Implement the feedback on the helicopter and run the helicopter. This is done in Simulink using the following blocks Mux, Demux, Matrix 17Multiplication, Sum, and “From Workspace”. Notice that the “From Workspace” block can import several values [a vector], meaning only one block is required for x.
-Please see the model (REFERENCE HERE).
-INSERT HERE!!!!!!!
+
+\Cref{fig:feedback-3} shows the final model required for part 10.2.
+
+\begin{figure}[H]
+\includegraphics[scale=0.3]{{figures/3-simulinksim_helicopter}.eps}
+\caption{Feedback system for the helicopter with static elevation control}
+\label{fig:feedback-3}
+\end{figure}
 
 \subsection{MPC Controller}
 % An alternative strategy would be to use an MPC controller. How would you realize this controller?
@@ -204,7 +238,7 @@ Given the following equation for elevation:
 \ddot{e} = -K_3K_{ed}\dot{e} - K_3K_{ep}e +K_3K_{ep}e_c
 \end{equation}
 
-Using (\ref{eq:elevation}) and converting it into a state-space model:
+Using (\Cref{eq:elevation}) and converting it into a state-space model:
 $$
 \begin{bmatrix}
 \dot{e} \\
@@ -222,7 +256,7 @@ K_3K_{ep}
 \end{bmatrix}e_c
 $$
 
-Merging this with (\ref{eq:initial_state}) yields
+Merging this with (\Cref{eq:initial_state}) yields
 
 \begin{equation}
 \bar{A}_c =
@@ -293,17 +327,55 @@ Yielding new matrices for the discrete case:
 Where $T$ is the time step, the above equations define the discrete state space form.
 
 \subsection{SQP Algorithm}
-Nothing here
+The SQP computation performed by $\mathrm{fmincon}$ is computed using the matlab scripts.
+\lstinputlisting[language=Matlab]{../problem_4.m}
+\lstinputlisting[language=Matlab]{../nonlcon.m}
+\lstinputlisting[language=Matlab]{../compute_lq4.m}
 
 \subsection{Optimal Input on Helicopter}
 % Implement the optimal input sequence on the helicopter. Introduce feedback in the same way as in exercise 3. Compare the performance with and without feedback.
-We'll need some GRAPHS here >:)
+Feedback is introduced similarly as in exercise three as can been seen in figure \Cref{fig:feedback-4}. The two cases were run from the same model, with the open loop having the gain replaced by a zero-gain. It can be observed that the open loop controller allows the biased helicopter to drift about. Both cases have a definitive hump around 30 degrees to about 37 degrees in elevation stemming from the nonlinear requirements. This hump converges back to 30 slowly.
+
+$N$ in the figure captions denote the step count (horizon). The y-axis represent degrees or degrees per second (with u being the exception as it is dimensionless). The x-axis represents time.
+
+\begin{figure}[H]
+\includegraphics[scale=0.3]{{figures/4-simulinksim_helicopter}.eps}
+\caption{Feedback system for the helicopter (N=40)}
+\label{fig:feedback-4}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/10.4.3.q1_1_q2_1_N_40}.eps}
+\caption{Closed loop response in of the system for case 10.4 (N=40)}
+\label{fig:feedback-4-closed}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/10.4.3.elevation.q1_1_q2_1_N_40}.eps}
+\caption{Closed loop elevation of the system for case 10.4 (N=40)}
+\label{fig:feedback-4-closed-elevation}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/openloop10.4.3.q1_1_q2_1_N_40}.eps}
+\caption{Open loop response in of the system for case 10.4 (N=40)}
+\label{fig:feedback-4-open}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{{figures/openloop10.4.3.elevation.q1_1_q2_1_N_40}.eps}
+\caption{Open loop elevation of the system for case 10.4 (N=40)}
+\label{fig:feedback-4-open-elevation}
+\end{figure}
+
 
 \subsection{Decoupled States}
 % Notice that the first 4 states in the model are completely decoupled from the last 2. How does this fit with reality? What effect does this have on the calculated optimal trajectory? Suggest [but do not implement] a solution to improve this.
+The decoupled stats do not seem to conform to reality, as a pitch would affect any elevation inputs which will increase the speed in which the pitch is pointing, affecting the optimal trajectory such that it isn't able to completely conform to it using the calculated $u*$. The solution would be to formulate a nonlinear system and linearize it at each point so that it can be controlled using conventional methods.
 
 \subsection{Adding More Constraints}
 % Optional exercise: Try adding more constraints on the states. These ̇may be constraints on maximal allowed speed e  ̇ and λ.
+One constraint to add is to state that the second element of $xl$ and $xu$ to about $0.1$, which we did implement in PROBLEM 4. This made the helicopter turn very slowly (about 6 degrees per second), however, its elevation became more easily noticable.
 
 % \subsection{Tables}
 % If you want, you can use the source for \Cref{tab:parameters} to see how a (floating) table is made.
