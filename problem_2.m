@@ -1,10 +1,6 @@
-% TTK4135 - Helicopter lab
-% Hints/template for problem 2.
-% Updated spring 2017, Andreas L. Fl?ten
+init04;
 
-%% Initialization and model definition
-init07; % NB: Change this to the init file corresponding to your helicopter
-delta_t = 0.25; % sampling time
+delta_t = 0.25;
 h = delta_t;
 q = 1;
 
@@ -99,6 +95,7 @@ x = [x1 x2 x3 x4];
 %% Plotting
 t = 0:delta_t:delta_t*(length(u)-1);
 
+figure('units','normalized','outerposition',[0 0 1 1]);
 subplot(511)
 stairs(t,u),grid
 title(['q=' num2str(q)]);
@@ -115,6 +112,7 @@ ylabel('p')
 subplot(515)
 plot(t,x4,'m',t,x4','mo'),grid
 xlabel('tid (s)'),ylabel('pdot')
+print(strcat('figures/10.2.3.q_', num2str(q), '.theory.eps'), '-depsc');
 
 seconds = (N+2*num_variables)*delta_t;
 u = [linspace(0,seconds,size(u,1))' u];

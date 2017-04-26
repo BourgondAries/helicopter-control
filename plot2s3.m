@@ -1,22 +1,22 @@
-figure_maxsize();
+load('travel.mat');
+load('travel_rate.mat');
+load('pitch.mat');
+load('pitch_rate.mat');
+figure('units','normalized','outerposition',[0 0 1 1]);
 subplot(3,2,1);
-plot(travel.time, travel.signals.values);
+plot(travel(1,:), travel(2,:));
 title('travel');
 subplot(3,2,2);
-plot(travel_rate.time, travel_rate.signals.values);
+plot(travel_rate(1,:), travel_rate(2,:));
 title('travel rate');
 subplot(3,2,3);
-plot(pitch.time, pitch.signals.values);
+plot(pitch(1,:), pitch(2,:));
 title('pitch');
 subplot(3,2,4);
-plot(pitch_rate.time, pitch_rate.signals.values);
+plot(pitch_rate(1,:), pitch_rate(2,:));
 title('pitch rate');
 subplot(3,2,[5 6]);
 plot(u(:,1), u(:,2));
 title('u');
 xlabel(strcat('time, q=', num2str(q)));
-print(strcat('figures/10.2.3.q_', num2str(q)), '-depsc');
-
-function figure_maxsize()
-	figure('units','normalized','outerposition',[0 0 1 1]);
-end
+print(strcat('figures/10.2.3.q_', num2str(q), '.eps'), '-depsc');
