@@ -22,7 +22,7 @@ mx = size(A1,2);                        % Number of states (number of columns in
 mu = size(B1,2);                        % Number of inputs (number of columns in B)
 
 % Time horizon and initialization
-N  = 80;                                % Time horizon for states
+N = 99;                                % Time horizon for states
 M  = N;                                 % Time horizon for inputs
 z  = zeros(N*mx+M*mu,1);                % Initialize z for the whole horizon
 z0 = z;                                 % Initial value for optimization
@@ -45,6 +45,8 @@ xl      = -Inf*ones(mx,1);              % Lower bound on states (no bound)
 xu      = Inf*ones(mx,1);               % Upper bound on states (no bound)
 xl(3)   = ul;                           % Lower bound on state x3
 xu(3)   = uu;                           % Upper bound on state x3
+xu(2)   = 0.1;
+xl(2)   = -0.1;
 
 % Generate constraints on measurements and inputs
 [vlb,vub]       = genbegr2(N,M,xl,xu,ul,uu); % hint: genbegr2
@@ -73,7 +75,7 @@ beq = zeros(mx*N,1);        	  % Generate b
 beq(1:mx) = A1*x0; % Initial value
 
 %% Solve QP problem with linear model
-options = optimoptions(@fmincon,'MaxIter',27000,'MaxFunEvals',27000);
+options = optimoptions(@fmincon,'MaxIter',50000,'MaxFunEvals',50000);
 tic;
 z = fmincon(fun,z0,[],[],Aeq,beq,vlb,vub,@nonlcon,options);
 % [z,lambda] = quadprog(Q,c,[],[],Aeq,beq,vlb,vub); % hint: quadprog
@@ -138,10 +140,10 @@ xlabel('tid (s)'),ylabel('e')
 subplot(717)
 plot(t,x6,'m',t,x6','mo'),grid
 xlabel('tid (s)'),ylabel('e_dot')
-print(strcat('figures/10.4.3.q_', num2str(q), '.theory.eps'), '-depsc');
+print(strcat('figures/10.4.3.q1_', num2str(q1), '_q2_', num2str(q2), '_N_', num2str(N), '.theory.eps'), '-depsc');
 figure('units','normalized','outerposition',[0 0 1 1]);
 stairs(t,u2),grid
-print(strcat('figures/10.4.3.u_q_', num2str(q), '.theory.eps'), '-depsc');
+print(strcat('figures/10.4.3.u_q1_', num2str(q1), '_q2_', num2str(q2), '_N_', num2str(N), '.theory.eps'), '-depsc');
 
 seconds = (N+2*num_variables)*delta_t;
 u = [linspace(0,seconds,size(u2,1))' u1 u2];
