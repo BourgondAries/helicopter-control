@@ -15,27 +15,6 @@ You can write Latex in your MATLAB figures. The script used to create \Cref{fig:
 
 \begin{figure}[htb]
 	\centering
-		\includegraphics[width=0.8\textwidth]{figures/constraint_jpg.jpg}
-	\caption{A plot in JPEG format --- a very bad idea.}
-\label{fig:constraint_jpg}
-\end{figure}
-
-\begin{figure}[htb]
-	\centering
-		\includegraphics[width=0.8\textwidth]{figures/constraint_png.png}
-	\caption{A plot in PNG format --- a bad idea.}
-\label{fig:constraint_png}
-\end{figure}
-
-\begin{figure}[htb]
-	\centering
-		\includegraphics[width=0.8\textwidth]{figures/constraint_png_large.png}
-	\caption{A plot in PNG format --- a bad idea. This figure is originally larger than the other PNG figure, but both are scaled to the same size.}
-\label{fig:constraint_png_large}
-\end{figure}
-
-\begin{figure}[htb]
-	\centering
 		\includegraphics[width=0.8\textwidth]{figures/constraint_eps.eps}
 	\caption{A plot in EPS format --- a much better idea.}
 \label{fig:constraint_eps}
@@ -43,11 +22,11 @@ You can write Latex in your MATLAB figures. The script used to create \Cref{fig:
 
 Remember to reference all figures in the text. Figures have a number and should be referenced by that number (again, always use dynamic references). They also tend to float around, meaning they generally don't appear where you ask them to in the text. This is fine, do not try to force a figure (or a table) to appear in a particular place. As long a you refer to it, it's easy to find. No figure should be included without being referenced in the text.
 
-If you look at the source code for including figures, you can see that the optional option \verb+[htb]+ has been used. This tells Latex where you wish the figure to appear, in prioritized order. \verb+h+ means ``Here'', t means ``Top of this page'', b means ``Bottom of this page'', and p (not used here) means ``on a Page with only floats (such as figures and tables)''. Note that your wish might not be granted, and this is because Latex actually optimizes the placement of figures. If you start forcing figures to be in specific places, it often leads to really strange layout somewhere else in the document. 
+If you look at the source code for including figures, you can see that the optional option \verb+[htb]+ has been used. This tells Latex where you wish the figure to appear, in prioritized order. \verb+h+ means ``Here'', t means ``Top of this page'', b means ``Bottom of this page'', and p (not used here) means ``on a Page with only floats (such as figures and tables)''. Note that your wish might not be granted, and this is because Latex actually optimizes the placement of figures. If you start forcing figures to be in specific places, it often leads to really strange layout somewhere else in the document.
 
 Generally, let Latex handle the documentation layout. This is one of the main reasons to choose Latex over software such as Microsoft Word.
 
 \subsection{Results and Discussion}
-All problems should have their own discussion of results. 
+All problems should have their own discussion of results.
 
 Remember: all plots and results need a description, explanation, and discussion.
