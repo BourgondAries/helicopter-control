@@ -1,2 +1,5 @@
 \section{Conclusion}\label{sec:conclusion}
-We were able to control the helicopter using both feedback and predictive control with the LQR controller. The nonlcon version was slightly more difficult and we may have missed out on some important variable.
+Bias in the case of no feedback threw the prediction off quite a bit. Manual tuning of parameters made it possible to make a fulle 180 degrees but the helicopter would never stay still at its position. The bias in question was particularly high for helicopter 4. With helicopter 7 we had less bias and were more easily able to apply feedback-free control.
+
+We were able to control the helicopter using both feedback and predictive control with the LQR controller. The fmincon version was slightly more difficult but in the end we managed to create some results that seemed plausible and we were happy.
+

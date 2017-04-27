@@ -1,6 +1,6 @@
 \section{Problem Description}\label{sec:prob_descr}
-A cantilevered unbalanced helicopter needs to be balanced using optimizing control.
-The complete model of the helicopter is outlined in equation \ref{eq:model}.
+An unbalanced levered helicopter needs to be balanced using optimizing control.
+The complete model of the helicopter is outlined in \Cref{eq:model}.
 \begin{subequations}\label{eq:model}
 	\begin{align}
 		\ddot{e} + K_{3} K_{ed} \dot{e} + K_{3} K_{ep} e = K_{3} K_{ep} e_{c} \label{eq:model_se_elev} \\
@@ -10,15 +10,13 @@ The complete model of the helicopter is outlined in equation \ref{eq:model}.
 	\end{align}
 \end{subequations}
 
-The specific exercises can be found in the appendix. The exercises are located in sections 10.2, 10.3, and 10.4 of appendix.
+The specific exercises can be found in sections 10.2, 10.3, and 10.4 of \Cref{sec:ex}.
 
-\subsection{Illustrations}
-% If you decide to include an illustration, that's great. You can in general copy figures and illustrations from the textbook, the assignement text, or other places. However: ALWAYS CITE THE SOURCE\@. You can also draw your own (cite the source if it is heavily based on someone else's.). \Cref{fig:layers_openloop} was created quickly with Ipe (\url{http://ipe.otfried.org/}). Inkscape is a good alternative for more advanced illustrations. Some people prefer the Latex package TikZ (\url{http://texample.net/tikz/examples/}), but this takes a little effort to learn.
-The following picture describes the lab setup.
+\Cref{fig:layers_openloop} shows the lab setup containing a lever. Its right side (from the viewer's perspective) contains a mass to balance the lever to some extent, and on the left side two motors serve as the helicopter. The motors are powered off in the picture, and is set up such that the direction of force from the blades goes against the force of gravity. The middle of the lever is connected to power and measuring devices such that its movement can be tracked.
 
-% \begin{figure}[tp]
-% 	\centering
-% 	\includegraphics[width=1.00\textwidth]{figures/layers_openloop.pdf}
-% 	\caption{A figure created with Ipe for TTK4135.}
-% \label{fig:layers_openloop}
-% \end{figure}
+\begin{figure}[tp]
+\centering
+\includegraphics[width=1.00\textwidth]{figures/WP_20170426_003.jpg}
+\caption{The levered helicopter as it is set up in the lab.}
+\label{fig:layers_openloop}
+\end{figure}

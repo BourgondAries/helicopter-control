@@ -4,15 +4,43 @@
 \section{MATLAB Code}\label{sec:matlab}
 This section documents our MATLAB code.
 
-\subsection{plot\_constraint.m}\label{sec:plot_constraint_m}
-\lstinputlisting{code/plot_constraint.m}\section{Simulink Diagrams}\label{sec:simulink}
-This section should contain your Simulink diagrams. Just like the plots, these should be in vector format, like in \Cref{fig:simulink}. Make them tidy enough to understand.
+\subsection{problem\_2.m}
+\lstinputlisting[language=Matlab,caption={Problem 2 code},label=lst:problem_2]{../problem_2.m}
+\subsection{compute\_lq.m}
+\lstinputlisting[language=Matlab,caption={Script for computing the LQ k gain},label=lst:compute_lq]{../compute_lq.m}
 
-\subsection{A Simulink Diagram}
-\Cref{fig:simulink} shows a Simulink diagram. You can use the \texttt{print\_simulink.m} function, included in the source code repository for this document, to export a Simulink model to EPS\@.
-\begin{figure}[htb]
+\subsection{problem\_4.m}
+\lstinputlisting[language=Matlab,caption={Problem 4 code},label=lst:problem_4]{../problem_4.m}
+\subsection{nonlcon.m}
+\lstinputlisting[language=Matlab,caption={Nonlinear constraint function},label=lst:nonlcon]{../nonlcon.m}
+\subsection{compute\_lq4.m}
+\lstinputlisting[language=Matlab,caption={Compute LQ for the fourth problem},label=lst:compute_lq4]{../compute_lq4.m}
+
+\section{Simulink Diagrams}\label{sec:simulink}
+This section contains Simulink diagrams.
+
+\subsection{No Feedback}
+\begin{figure}[H]
 	\centering
-		\includegraphics[width = \textwidth]{figures/simulink.pdf}
-	\caption{A Simulink diagram.}
-\label{fig:simulink}
+		\includegraphics[scale=0.3]{figures/{2-simulinksim_helicopter}.eps}
+	\caption{The simulink model used for optimal open loop control.}
+\label{fig:2-simulink}
 \end{figure}
+
+\subsection{Feedback (LQ)}
+\begin{figure}[H]
+\includegraphics[scale=0.3]{figures/3-simulinksim_helicopter.eps}
+\caption{Feedback system for the helicopter with static elevation control}
+\label{fig:feedback-3}
+\end{figure}
+
+\subsection{Pitch and Elevation Control}
+\begin{figure}[H]
+\includegraphics[scale=0.3]{{figures/4-simulinksim_helicopter}.eps}
+\caption{Feedback system for the helicopter (N=40), for the non-feedback case the constant gain is zerod.}
+\label{fig:feedback-4}
+\end{figure}
+
+\section{Lab exercises}\label{sec:ex}
+\includepdf[pages={-}]{LabExercise.pdf}
+

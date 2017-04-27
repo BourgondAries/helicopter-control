@@ -1,13 +1,14 @@
 \newcommand{\texMacro}[2]{\texttt{\textbackslash{#1}\{#2\}}}
 % \section{General LaTeX tips}\label{sec:latex_tips}
 % Some tips were given in \Cref{sec:intro}, and this section will elaborate with some more concrete examples.
-\section{Optimal Control of Pitch/Travel without Feedback}
+\section{Results and Discussion}
+\subsection{Optimal Control of Pitch/Travel without Feedback}
 
-\subsection{Continuous State Space Form}
+\subsubsection{Continuous State Space Form}
 % Write the model on continuous time state space form
-First we must formulate the model (\Cref{eq:model}) in a continuous state-space form. Elevation is neglected here.
+First we must formulate the model \Cref{eq:model} in a continuous state-space form. Elevation is neglected here.
 
-The equation for elevation (\Cref{eq:model_se_elev}) is completely removed from the model (\Cref{eq:model}) and we are left with the following set of equations.
+The equation for elevation \Cref{eq:model_se_elev} is completely removed from the model \Cref{eq:model} and we are left with the following set of equations.
 
 \begin{subequations}
 	\begin{align}
@@ -17,30 +18,30 @@ The equation for elevation (\Cref{eq:model_se_elev}) is completely removed from 
 	\end{align}
 \end{subequations}
 
-Since $ \vec{x} = [\lambda\ r\ p\ \dot{p}]^T $, and $ u = p_c $ we can formulate $\ddot{p}$ as a vector product.
+Since $ x = [\lambda\ r\ p\ \dot{p}]^T $, and $ u = p_c $ we can formulate $\ddot{p}$ as a vector product.
 
 \begin{equation}
-	\ddot{p} = [0\ 0\ -K_1K_{pp}\ -K_1K_{pd}]^T \vec{x} + [K_1K_{pp}]^T u
+	\ddot{p} = [0\ 0\ -K_1K_{pp}\ -K_1K_{pd}] x + K_1K_{pp}\ u
 \end{equation}
 
 The change in $ p $ as:
 
 \begin{equation}
-\dot{p} = [0\ 0\ 0\ 1]^T \vec{x} + [0]^T u
+\dot{p} = [0\ 0\ 0\ 1] x + 0\ u
 \end{equation}
 
 likewise for $ r $:
 \begin{equation}
-	\dot{r} = [0\ 0\ -K_2\ 0]^T \vec{x} + [0]^T u
+	\dot{r} = [0\ 0\ -K_2\ 0] x + 0\ u
 \end{equation}
 and finally $\lambda$:
 \begin{equation}
-	\dot{\lambda} = [0\ 1\ 0\ 0]^T \vec{x} + [0]^T u
+	\dot{\lambda} = [0\ 1\ 0\ 0] x + 0\ u
 \end{equation}
 
-Using the formulas that were given we construct a state-space model of form in (\Cref{eq:state-space}).
+Using the formulas that were given we construct a state-space model of form in \Cref{eq:state-space}.
 \begin{equation}\label{eq:state-space}
-	\vec{\dot{x}} = A_c \vec{x} + \vec{B_c} u
+	\dot{x} = A_c\ x + B_c\ u
 \end{equation}
 
 \begin{subequations}
@@ -69,50 +70,50 @@ B_c =
 \end{equation}
 
 % What are we modeling here? Is it just the helicopter? Discuss what the model includes, and how it relates to Figure 7.
-The aforementioned model various states of the helicopter; including pitch, distance traveled, travel speed, and the input and its effects on these variables. Additionally we make the  simplifying assumptions that the pitch angle is small, and that there is no friction or air resistance acting on the helicopter resisting the direction of travel. Figure (APPENDIX FIGURE 7) contains the precomputed $u*$ which are fed into the system.
+The aforementioned model various states of the helicopter; including pitch, distance traveled, travel speed, and the input and its effects on these variables. Additionally we make the  simplifying assumptions that the pitch angle is small, and that there is no friction or air resistance acting on the helicopter resisting the direction of travel. Figure 7 in \Cref{sec:ex} contains the precomputed $u*$ which are fed into the system, which is how the model is related to the figure.
 
-\subsection{Forward Euler Discretization}
+\subsubsection{Forward Euler Discretization}
 % Discretize the model using the forward Euler method and write the resulting model on discrete time state space form
 
 Using Euler's time discretization on the system's standard form we will get the following expression:
 
 \begin{equation}
-	x_{k+1} = Ax_k + Bu_k
+	x_{k+1} = A\ x_k + B\ u_k
 \end{equation}
 First we discretize the derivative vector
 \begin{subequations}
 \begin{align}
-\vec{\dot{x}} = \lim_{h\rightarrow 0} \frac{\vec{x}_{k+1}-\vec{x}_{k}}{h} \\
-\Rightarrow \vec{\dot{x}} = \lim_{h\rightarrow 0} \frac{\vec{x}_{k+1}-\vec{x}_{k}}{h} = \mathbf{A_c} \vec{x}_k + \vec{B_c} u_k
+{\dot{x}} = \lim_{h\rightarrow 0} \frac{{x}_{k+1}-{x}_{k}}{h} \\
+\Rightarrow {\dot{x}} = \lim_{h\rightarrow 0} \frac{{x}_{k+1}-{x}_{k}}{h} = {A_c} {x}_k + {B_c} u_k
 \end{align}
 \end{subequations}
 We ignore the limit, it's implicit for $ h $.
 \begin{equation}
-\Rightarrow \vec{x}_{k+1} = \vec{x}_{k} + h(\mathbf{A_c} \vec{x}_k + \vec{B_c} u_k)
+\Rightarrow {x}_{k+1} = {x}_{k} + h({A_c} {x}_k + {B_c} u_k)
 \end{equation}
-Now $ \vec{x}_k $ can be algebraically merged into a matrix.
+Now $ {x}_k $ can be algebraically merged into a matrix.
 \begin{subequations}
 \begin{align}
-\Rightarrow \vec{x}_{k+1} = h{A_c} \vec{x}_k + \vec{x}_{k} + h\vec{B_c} u_k \\
-\Rightarrow \vec{x}_{k+1} = (h{A_c} \mathbf{I} + \mathbf{I})\vec{x}_k + h\vec{B_c} u_k
+\Rightarrow {x}_{k+1} = h{A_c} {x}_k + {x}_{k} + h{B_c} u_k \\
+\Rightarrow {x}_{k+1} = (h{A_c} {I} + {I}){x}_k + h{B_c} u_k
 \end{align}
 \end{subequations}
-This is the same as adding $ 1 $ to each diagonal in $ h\mathbf{A_c} $. We rename it ($hA_c\mathbf{I} + \mathbf{I}$) to $ {A}$ and ($h\vec{B_c}$) to $B$.
+This is the same as adding $ 1 $ to each diagonal in $ h{A_c} $. We rename ($hA_c{I} + {I}$) to $ {A}$ and ($h{B_c}$) to $B$.
 \begin{equation} \label{mat:eq}
-\Rightarrow \vec{x}_{k+1} = \mathbf{A} \vec{x}_k + \vec{B} u_k
+\Rightarrow {x}_{k+1} = {A}\ {x}_k + {B}\ u_k
 \end{equation}
 Where
 \begin{equation}
-\mathbf{A} = h\mathbf{A_c} + \mathbf{I}
+{A} = h\ {A_c} + {I}
 \end{equation}
 \begin{equation}
-\vec{B} = h\vec{B_c}
+{B} = h{B_c}
 \end{equation}
 
 This defines the discrete time state space form.
 
 
-\subsection{Calculate an Optimal Trajectory}
+\subsubsection{Calculate an Optimal Trajectory}
 %  Calculate an optimal trajectory for moving the helicopter from x 0 = λ 0 0 0 0 to x f = λ f 0 0 0 when the elevation angle is assumed to be constant. Use λ 0 = π and λ f = 0. Also implement the constraint 30π |p k | ≤ , k ∈ {1, . . . , N } [14] 180 Since the manipulated variable p c in this case is the setpoint for the p controller, the constraint should also be implemented for the manipu- lated variable. We want to minimize the cost function N [λ i − λ f ] 2 + qp 2 ci , φ = q ≥ 0 [15] i=1 Solve the optimization problem using the MATLAB function quad- prog. Try using the values 0.1, 1, and 10 as weights q. Plot the manipulated variable and the output. Comment the results with re- spect to the different weights chosen. Remember that some useful files are posted on Blackboard. Use a sampling time of 0.25 s and N = 100.  15Furthermore, discuss the objective function [15], in particular the term [λ i − λ f ] 2 . For instance, could any unwanted effects arise from steer- ing the helicopter to λ = λ f with this objective function?
 We encode the equality constraint using \Cref{mat:eq}, this gives us a constraint where we have a matrix of the form
 \begin{equation}
@@ -128,14 +129,14 @@ A_{eq} =
 
 With the constraint
 \begin{equation}
-\mathbf{A}_{eq}^{[400x500]} \vec{x} = \vec{B}_{eq}
+{A}_{eq}^{[400x500]} {x} = {B}_{eq}
 \end{equation}
 Where
 \begin{equation}
-\vec{B}_{eq}[t] = \vec{0}\ \forall t > 1
+{B}_{eq}[t] = {0}\ \forall t > 1
 \end{equation}
 \begin{equation}
-\vec{B}_{eq}[1] = Ax_0
+{B}_{eq}[1] = Ax_0
 \end{equation}
 
 The following plots convey our theoretical and practical results:
@@ -190,38 +191,27 @@ when $ \lambda_f = 0 $. This term is not scaled (except for unit scaling) such t
 \label{fig:10.2.3.q_10}
 \end{figure}
 
-\subsection{Offset}
+\subsubsection{Offset}
 % The specific implementation of the QP algorithm used here can only weight deviations from origin [λ f = 0]. The position sensors on the helicopter are relative, which means that the position is reset to zero each time the helicopter is started. To get the helicopter to start in x 0 you have to add a suitable value to the measurement. For example, you can subtract 30 ◦ from the elevation measurement to get the helicopter to fly at a reasonable height when e c = 0 [this is done in the given file]. Implement the input sequence generated in c] with q = 1.  The optimization in c] gives the manipulated variable u. It may be a good idea to add some zeros at the beginning of the input vector, so that the helicopter has time to stabilize in x 0 before the calculated sequence is implemented. Also, adding zeros at the end of the vector is recommended to keep the helicopter stable after the input sequence is over. Add enough zeros to keep the helicopter stable for at least 5 s before and after the optimal input sequence is implemented. The easiest way to transfer the input sequence to Simulink is to use a “From Workspace” block [which can be found under “Sources” in the Library Browser]. This block imports two vectors, a vector u which is connected to the output and a time vector t which determines when the different elements of u should be transfered to the output.  Does the helicopter end in the desired point x f ? What causes the observed deviation?
 
-We implemented this optimal control sequence on the test helicopters and observed noticable deviation from the desired final position. This is due to lack of feedback to account for physical disturbances, modeling inconsistencies and linearizion errors.
+Implementing this optimal control sequence on the test helicopters and yielded noticable deviation from the desired final position. This is due to lack of feedback to account for physical disturbances, modeling inconsistencies and linearizion errors.
 
 % Does the helicopter end in the desired point x f ? What causes the observed deviation?
 The helicopter does not end in the desired point because there's significant clockwise bias when the helicopter is left with a zero input.
 
-\section{Optimal Control of Pitch/Travel with Feedback (LQ)}
+\subsection{Optimal Control of Pitch/Travel with Feedback (LQ)}
 
-\subsection{LQ Control}
+\subsubsection{LQ Control}
 % In MATLAB you can use the function dlqr to calculate the optimal K matrix. Q and R indicates how much you want to penalize deviation in the states, and how much you want to penalize use of the manipulated variable. Use diagonal matrices for Q and R. A diagonal matrix is easily made in MATLAB using the function diag.
-Feedback $k$ is computed using \Cref{lst:compute_lq}.
+Feedback $k$ is computed using \Cref{lst:compute_lq}.  This script uses $A1$ and $B1$ which are defined in \Cref{lst:problem_2}.
 
-\lstinputlisting[language=Matlab,caption={Script for computing the LQ k gain},label=lst:compute_lq]{../compute_lq.m}
-
-This script uses $A1$ and $B1$ which are defined in \Cref{lst:problem_2}.
-
-\lstinputlisting[language=Matlab,caption={Problem 2 code},label=lst:problem_2]{../problem_2.m}
-
-\subsection{Simulink Feedback}
+\subsubsection{Simulink Feedback}
 % Implement the feedback on the helicopter and run the helicopter. This is done in Simulink using the following blocks Mux, Demux, Matrix 17Multiplication, Sum, and “From Workspace”. Notice that the “From Workspace” block can import several values [a vector], meaning only one block is required for x.
 
 \Cref{fig:feedback-3} shows the final model required for part 10.2.
 
-\begin{figure}[H]
-\includegraphics[scale=0.3]{{figures/3-simulinksim_helicopter}.eps}
-\caption{Feedback system for the helicopter with static elevation control}
-\label{fig:feedback-3}
-\end{figure}
 
-\subsection{MPC Controller}
+\subsubsection{MPC Controller}
 % An alternative strategy would be to use an MPC controller. How would you realize this controller?
 We would realize the MPC controller by creating a matlab function block in the simulink diagram that uses the current state as an initial state in the horizon. After solving the horizon for $u$, we supply the first element of $u$ to as input.
 
@@ -230,15 +220,15 @@ The MPC controller may be significantly more expensive. The LQR is much simpler 
 
 % Also, think about how the structure in Figure 8 would look if you used MPC.
 
-\section{Optimal Control of Pitch/Travel and Elevation with and without Feedback}
-\subsection{Continuous State Space Form}
+\subsection{Optimal Control of Pitch/Travel and Elevation with and without Feedback}
+\subsubsection{Continuous State Space Form}
 % Write the system on continuous state space form with the two extra states e and e.  ̇ Use x = λ r p p  ̇ e e  ̇ and u = p c e c
 Given the following equation for elevation:
 \begin{equation}\label{eq:elevation}
 \ddot{e} = -K_3K_{ed}\dot{e} - K_3K_{ep}e +K_3K_{ep}e_c
 \end{equation}
 
-Using (\Cref{eq:elevation}) and converting it into a state-space model:
+Using \Cref{eq:elevation} and converting it into a state-space model:
 $$
 \begin{bmatrix}
 \dot{e} \\
@@ -256,7 +246,7 @@ K_3K_{ep}
 \end{bmatrix}e_c
 $$
 
-Merging this with (\Cref{eq:initial_state}) yields
+Merging this with \Cref{eq:initial_state} yields
 
 \begin{equation}
 \bar{A}_c =
@@ -288,7 +278,7 @@ Completing the system by forming the expression
 \dot{x} = A_c\ x + B_c\ x
 \end{equation}
 
-\subsection{Forward Euler Discretization}
+\subsubsection{Forward Euler Discretization}
 % Discretize the model using the forward Euler method and write the resulting model on discrete state space form.
 
 Using the same technique as previously utilized:
@@ -326,23 +316,15 @@ Yielding new matrices for the discrete case:
 
 Where $T$ is the time step, the above equations define the discrete state space form.
 
-\subsection{SQP Algorithm}
-The SQP computation performed by $\mathrm{fmincon}$ is computed using the matlab scripts.
-\lstinputlisting[language=Matlab]{../problem_4.m}
-\lstinputlisting[language=Matlab]{../nonlcon.m}
-\lstinputlisting[language=Matlab]{../compute_lq4.m}
+\subsubsection{SQP Algorithm}
+The SQP computation performed by $\mathrm{fmincon}$ is computed using the matlab scripts \Cref{lst:problem_4}, \Cref{lst:nonlcon}, and \Cref{lst:compute_lq4}.
 
-\subsection{Optimal Input on Helicopter}
+\subsubsection{Optimal Input on Helicopter}
 % Implement the optimal input sequence on the helicopter. Introduce feedback in the same way as in exercise 3. Compare the performance with and without feedback.
 Feedback is introduced similarly as in exercise three as can been seen in figure \Cref{fig:feedback-4}. The two cases were run from the same model, with the open loop having the gain replaced by a zero-gain. It can be observed that the open loop controller allows the biased helicopter to drift about. Both cases have a definitive hump around 30 degrees to about 37 degrees in elevation stemming from the nonlinear requirements. This hump converges back to 30 slowly.
 
 $N$ in the figure captions denote the step count (horizon). The y-axis represent degrees or degrees per second (with u being the exception as it is dimensionless). The x-axis represents time.
 
-\begin{figure}[H]
-\includegraphics[scale=0.3]{{figures/4-simulinksim_helicopter}.eps}
-\caption{Feedback system for the helicopter (N=40)}
-\label{fig:feedback-4}
-\end{figure}
 
 \begin{figure}[H]
 \includegraphics[scale=0.8]{{figures/10.4.3.q1_1_q2_1_N_40}.eps}
@@ -369,37 +351,10 @@ $N$ in the figure captions denote the step count (horizon). The y-axis represent
 \end{figure}
 
 
-\subsection{Decoupled States}
+\subsubsection{Decoupled States}
 % Notice that the first 4 states in the model are completely decoupled from the last 2. How does this fit with reality? What effect does this have on the calculated optimal trajectory? Suggest [but do not implement] a solution to improve this.
 The decoupled stats do not seem to conform to reality, as a pitch would affect any elevation inputs which will increase the speed in which the pitch is pointing, affecting the optimal trajectory such that it isn't able to completely conform to it using the calculated $u*$. The solution would be to formulate a nonlinear system and linearize it at each point so that it can be controlled using conventional methods.
 
-\subsection{Adding More Constraints}
+\subsubsection{Adding More Constraints}
 % Optional exercise: Try adding more constraints on the states. These ̇may be constraints on maximal allowed speed e  ̇ and λ.
-One constraint to add is to state that the second element of $xl$ and $xu$ to about $0.1$, which we did implement in PROBLEM 4. This made the helicopter turn very slowly (about 6 degrees per second), however, its elevation became more easily noticable.
-
-% \subsection{Tables}
-% If you want, you can use the source for \Cref{tab:parameters} to see how a (floating) table is made.
-
-% \begin{table}[tbp]
-% 	\centering
-% 	\caption{Parameters and values.}
-% 	\begin{tabular}{llll}
-% 		\toprule
-% 		Symbol & Parameter & Value & Unit \\
-% 		\midrule
-% 		$l_a$ & Distance from elevation axis to helicopter body & $0.63$ & \meter\\
-% 		$l_h$ & Distance from pitch axis to motor & $0.18$ & \meter\\
-% 		$K_f$ & Force constant motor & $0.25$ & \newton\per\volt\\
-% 		$J_e$ & Moment of inertia for elevation & $0.83$ & \kilogram\usk\meter\squared\\
-% 		$J_t$ & Moment of inertia for travel & $0.83$ & \kilogram\usk\meter\squared\\
-% 		$J_p$ & Moment of inertia for pitch & $0.034$ & \kilogram\usk\meter\squared\\
-% 		$m_h$ & Mass of helicopter & $1.05$ & \kilogram\\
-% 		$m_w$ & Balance weight & $1.87$ & \kilogram\\
-% 		$m_g$ & Effective mass of the helicopter & $0.05$ & \kilogram\\
-% 		$K_p$ & Force to lift the helicopter from the ground & $0.49$ & \newton\\
-% 		\bottomrule
-% 	\end{tabular}
-% \label{tab:parameters}
-% \end{table}
-
-% There is also a lot of useful software to manage your references. Some popular examples include JabRef (\url{http://www.jabref.org/}), Mendeley (\url{https://www.mendeley.com/}) and EndNote. JabRef is perhaps the simplest of these three, and stores all information in a \texttt{.bib} file that you can directly use in your Latex document. Both Mendeley and EndNote can export references as BibTeX.
+One constraint to add is to state that the second element of $xl$ and $xu$ to about $0.1$, which was implemented in \Cref{lst:problem_4}. This made the helicopter turn very slowly (about 6 degrees per second), however, its elevation became more easily noticable.
