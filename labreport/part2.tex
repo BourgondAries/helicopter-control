@@ -7,9 +7,7 @@
 \subsubsection{Continuous State Space Form}
 % Write the model on continuous time state space form
 First we must formulate the model \Cref{eq:model} in a continuous state-space form. Elevation is neglected here.
-
 The equation for elevation \Cref{eq:model_se_elev} is completely removed from the model \Cref{eq:model} and we are left with the following set of equations.
-
 \begin{subequations}
 	\begin{align}
 		\ddot{p} = - K_1K_{pd}\dot{p} - K_1K_{pp}p + K_1K_{pp}p_c \\
@@ -17,19 +15,14 @@ The equation for elevation \Cref{eq:model_se_elev} is completely removed from th
 		\dot{r} = -K_2p
 	\end{align}
 \end{subequations}
-
 Since $ x = [\lambda\ r\ p\ \dot{p}]^T $, and $ u = p_c $ we can formulate $\ddot{p}$ as a vector product.
-
 \begin{equation}
 	\ddot{p} = [0\ 0\ -K_1K_{pp}\ -K_1K_{pd}] x + K_1K_{pp}\ u
 \end{equation}
-
 The change in $ p $ as:
-
 \begin{equation}
 \dot{p} = [0\ 0\ 0\ 1] x + 0\ u
 \end{equation}
-
 likewise for $ r $:
 \begin{equation}
 	\dot{r} = [0\ 0\ -K_2\ 0] x + 0\ u
@@ -38,7 +31,6 @@ and finally $\lambda$:
 \begin{equation}
 	\dot{\lambda} = [0\ 1\ 0\ 0] x + 0\ u
 \end{equation}
-
 Using the formulas that were given we construct a state-space model of form in \Cref{eq:state-space}.
 \begin{equation}\label{eq:state-space}
 	\dot{x} = A_c\ x + B_c\ u
@@ -68,15 +60,12 @@ B_c =
 	\alpha_1
 \end{bmatrix}
 \end{equation}
-
 % What are we modeling here? Is it just the helicopter? Discuss what the model includes, and how it relates to Figure 7.
 The aforementioned model various states of the helicopter; including pitch, distance traveled, travel speed, and the input and its effects on these variables. Additionally we make the  simplifying assumptions that the pitch angle is small, and that there is no friction or air resistance acting on the helicopter resisting the direction of travel. Figure 7 in \Cref{sec:ex} contains the precomputed $u*$ which are fed into the system, which is how the model is related to the figure.
 
 \subsubsection{Forward Euler Discretization}
 % Discretize the model using the forward Euler method and write the resulting model on discrete time state space form
-
 Using Euler's time discretization on the system's standard form we will get the following expression:
-
 \begin{equation}
 	x_{k+1} = A\ x_k + B\ u_k
 \end{equation}
@@ -107,9 +96,8 @@ Where
 {A} = h\ {A_c} + {I}
 \end{equation}
 \begin{equation}
-{B} = h{B_c}
+{B} = h\ {B_c}
 \end{equation}
-
 This defines the discrete time state space form.
 
 
@@ -126,7 +114,6 @@ A_{eq} =
     0      & 0  & 0 & 0 & \hdots & -A     & I  & 0  & 0  & 0  & \hdots & -B\\
 \end{bmatrix}
 \end{equation}
-
 With the constraint
 \begin{equation}
 {A}_{eq}^{[400x500]} {x} = {B}_{eq}
@@ -138,21 +125,14 @@ Where
 \begin{equation}
 {B}_{eq}[1] = Ax_0
 \end{equation}
-
 The following plots convey our theoretical and practical results:
-
 The graphs with the circles are theoretical and the one with only blue line graphs are practical. There are significant differences between these.
-
 One can observe that setting $ q = 0.1 $ does not particularly affect travel rate in practice, but setting $ q = 10 $ affects travel rate significantly.
-
 The objective function can be collapsed into:
 
 $$ \sum_{i=1}^N \lambda_i^2 + qp_{ci}^2 $$
-
 % Furthermore, discuss the objective function [15], in particular the term [λ i − λ f ] 2 . For instance, could any unwanted effects arise from steer- ing the helicopter to λ = λ f with this objective function?
-
 when $ \lambda_f = 0 $. This term is not scaled (except for unit scaling) such that we can fully control the objective function by exploiting $ q $. An unwanted effect could be overshoot, since a high $ q $ implies $ p_{ci} $ taking priority over $ \lambda_i $.
-
 \begin{figure}[H]
 \includegraphics[scale=0.8]{{figures/10.2.3.q_0.1.theory}.eps}
 \caption{Theoretical rates from the physical helicopter (q = 0.1), y-axes are in radians except for u, x-axes denote time in seconds}
@@ -193,9 +173,7 @@ when $ \lambda_f = 0 $. This term is not scaled (except for unit scaling) such t
 
 \subsubsection{Offset}
 % The specific implementation of the QP algorithm used here can only weight deviations from origin [λ f = 0]. The position sensors on the helicopter are relative, which means that the position is reset to zero each time the helicopter is started. To get the helicopter to start in x 0 you have to add a suitable value to the measurement. For example, you can subtract 30 ◦ from the elevation measurement to get the helicopter to fly at a reasonable height when e c = 0 [this is done in the given file]. Implement the input sequence generated in c] with q = 1.  The optimization in c] gives the manipulated variable u. It may be a good idea to add some zeros at the beginning of the input vector, so that the helicopter has time to stabilize in x 0 before the calculated sequence is implemented. Also, adding zeros at the end of the vector is recommended to keep the helicopter stable after the input sequence is over. Add enough zeros to keep the helicopter stable for at least 5 s before and after the optimal input sequence is implemented. The easiest way to transfer the input sequence to Simulink is to use a “From Workspace” block [which can be found under “Sources” in the Library Browser]. This block imports two vectors, a vector u which is connected to the output and a time vector t which determines when the different elements of u should be transfered to the output.  Does the helicopter end in the desired point x f ? What causes the observed deviation?
-
 Implementing this optimal control sequence on the test helicopters and yielded noticable deviation from the desired final position. This is due to lack of feedback to account for physical disturbances, modeling inconsistencies and linearizion errors.
-
 % Does the helicopter end in the desired point x f ? What causes the observed deviation?
 The helicopter does not end in the desired point because there's significant clockwise bias when the helicopter is left with a zero input.
 
@@ -214,7 +192,6 @@ Feedback $k$ is computed using \Cref{lst:compute_lq}.  This script uses $A1$ and
 \subsubsection{MPC Controller}
 % An alternative strategy would be to use an MPC controller. How would you realize this controller?
 We would realize the MPC controller by creating a matlab function block in the simulink diagram that uses the current state as an initial state in the horizon. After solving the horizon for $u$, we supply the first element of $u$ to as input.
-
 % Discuss advantages and disadvantages with and MPC controller compared to the controller you have implemented.
 The MPC controller may be significantly more expensive. The LQR is much simpler in that it takes one big computation on that generates a multiplication matrix which does not need to be recomputed. In essence the MPC controller needs to solve this at every time step which may be more costly to run. The LQR controller is also simpler in its design.
 
@@ -227,7 +204,6 @@ Given the following equation for elevation:
 \begin{equation}\label{eq:elevation}
 \ddot{e} = -K_3K_{ed}\dot{e} - K_3K_{ep}e +K_3K_{ep}e_c
 \end{equation}
-
 Using \Cref{eq:elevation} and converting it into a state-space model:
 $$
 \begin{bmatrix}
@@ -245,9 +221,7 @@ e \\
 K_3K_{ep}
 \end{bmatrix}e_c
 $$
-
 Merging this with \Cref{eq:initial_state} yields
-
 \begin{equation}
 \bar{A}_c =
 \begin{bmatrix}
@@ -271,25 +245,19 @@ Merging this with \Cref{eq:initial_state} yields
     0 & K_3K_{ep}
 \end{bmatrix}
 \end{equation}
-
 Completing the system by forming the expression
-
 \begin{equation}
 \dot{x} = A_c\ x + B_c\ x
 \end{equation}
 
 \subsubsection{Forward Euler Discretization}
 % Discretize the model using the forward Euler method and write the resulting model on discrete state space form.
-
 Using the same technique as previously utilized:
-
 $$ \dot{x} = \bar{A}_c x + \bar{B}_c u $$
 $$ \Rightarrow \frac{x_{t+1} - x_t}{T} = \bar{A}_c x_t + \bar{B}_c u_t $$
 $$ \Rightarrow x_{t+1} = x_t + T\bar{A}_c x_t + T\bar{B}_c u_t $$
 $$ \Rightarrow x_{t+1} = (I + T\bar{A}_c) x_t + T\bar{B}_c u_t $$
-
 Yielding new matrices for the discrete case:
-
 \begin{equation}
 \bar{A} =
 \begin{bmatrix}
@@ -313,7 +281,6 @@ Yielding new matrices for the discrete case:
     0 & TK_3K_{ep}
 \end{bmatrix}
 \end{equation}
-
 Where $T$ is the time step, the above equations define the discrete state space form.
 
 \subsubsection{SQP Algorithm}
@@ -322,7 +289,6 @@ The SQP computation performed by $\mathrm{fmincon}$ is computed using the matlab
 \subsubsection{Optimal Input on Helicopter}
 % Implement the optimal input sequence on the helicopter. Introduce feedback in the same way as in exercise 3. Compare the performance with and without feedback.
 Feedback is introduced similarly as in exercise three as can been seen in figure \Cref{fig:feedback-4}. The two cases were run from the same model, with the open loop having the gain replaced by a zero-gain. It can be observed that the open loop controller allows the biased helicopter to drift about. Both cases have a definitive hump around 30 degrees to about 37 degrees in elevation stemming from the nonlinear requirements. This hump converges back to 30 slowly.
-
 $N$ in the figure captions denote the step count (horizon). The y-axis represent degrees or degrees per second (with u being the exception as it is dimensionless). The x-axis represents time.
 
 
@@ -349,7 +315,6 @@ $N$ in the figure captions denote the step count (horizon). The y-axis represent
 \caption{Open loop elevation of the system for case 10.4 (N=40), y-axes are in degrees except for u, x-axes denote time in seconds}
 \label{fig:feedback-4-open-elevation}
 \end{figure}
-
 
 \subsubsection{Decoupled States}
 % Notice that the first 4 states in the model are completely decoupled from the last 2. How does this fit with reality? What effect does this have on the calculated optimal trajectory? Suggest [but do not implement] a solution to improve this.
