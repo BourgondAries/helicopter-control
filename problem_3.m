@@ -35,6 +35,7 @@ z0 = z;                          % Initial value for optimization
 % Bounds
 ul      = -30*pi/180;            % Lower bound on control -- u1
 uu      = 30*pi/180;             % Upper bound on control -- u1
+
 xl      = -Inf*ones(mx,1);       % Lower bound on states (no bound)
 xu      = Inf*ones(mx,1);        % Upper bound on states (no bound)
 xl(3)   = ul;                    % Lower bound on state x3
@@ -112,7 +113,7 @@ ylabel('p')
 subplot(515)
 plot(t,x4,'m',t,x4','mo'),grid
 xlabel('tid (s)'),ylabel('pdot')
-print(strcat('figures/10.2.3.q_', num2str(q), '.theory.eps'), '-depsc');
+print(strcat('figures/10.3.3.q_', num2str(q), '.theory.eps'), '-depsc');
 
 seconds = (N+2*num_variables)*delta_t;
 u = [linspace(0,seconds,size(u,1))' u];

@@ -1,13 +1,15 @@
-init04;
-delta_t = 0.25;
+% Initialize the model
+init07; % Change to appropriate model
+delta_t = 0.25; % sampling time
 h = delta_t;
-q1 = 1;
+q1 = 1; % Objective function weight
 q2 = 1;
 
+% Convenience definitions
 alpha1 = K_1*K_pp;
 alpha2 = K_1*K_pd;
 
-% Discrete time system model. x = [lambda r p p_dot]'
+% Discrete time system model. x = [lambda r p p_dot e e_dot]'
 A1 = [0   1   0       0        0         0;
       0   0   -K_2    0        0         0;
       0   0   0       1        0         0;
@@ -18,67 +20,66 @@ B1 = [0   0   0       alpha1   0         0;
       0   0   0       0        0         K_3*K_ep]'*h;
 
 % Number of states and inputs
-mx = size(A1,2);                        % Number of states (number of columns in A)
-mu = size(B1,2);                        % Number of inputs (number of columns in B)
+mx = size(A1,2); % Number of states
+mu = size(B1,2); % Number of inputs
 
 % Time horizon and initialization
-N = 99;                                % Time horizon for states
-M  = N;                                 % Time horizon for inputs
-z  = zeros(N*mx+M*mu,1);                % Initialize z for the whole horizon
-z0 = z;                                 % Initial value for optimization
+N = 99;                          % Time horizon for states
+M  = N;                          % Time horizon for inputs
+z  = zeros(N*mx+M*mu,1);         % Initialize z for the whole horizon
+z0 = z;                          % Initial value for optimization
 
 % Initial values
-x1_0 = pi;                              % Lambda
-x2_0 = 0;                               % r
-x3_0 = 0;                               % p
-x4_0 = 0;                               % p_dot
-x5_0 = 0;                               % e
-x6_0 = 0;                               % e_dot
+x1_0 = pi;                       % Lambda
+x2_0 = 0;                        % r
+x3_0 = 0;                        % p
+x4_0 = 0;                        % p_dot
+x5_0 = 0;                        % e
+x6_0 = 0;                        % e_dot
 x0 = [x1_0 x2_0 x3_0 x4_0 x5_0 x6_0]';  % Initial values
 
 
 % Bounds
-ul      = -30*pi/180;                   % Lower bound on control -- u1
-uu      = 30*pi/180;                    % Upper bound on control -- u1
+ul      = -30*pi/180;            % Lower bound on control -- u1
+uu      = 30*pi/180;             % Upper bound on control -- u1
 
-xl      = -Inf*ones(mx,1);              % Lower bound on states (no bound)
-xu      = Inf*ones(mx,1);               % Upper bound on states (no bound)
-xl(3)   = ul;                           % Lower bound on state x3
-xu(3)   = uu;                           % Upper bound on state x3
-xu(2)   = 0.1;
-xl(2)   = -0.1;
+xl      = -Inf*ones(mx,1);       % Lower bound on states (no bound)
+xu      = Inf*ones(mx,1);        % Upper bound on states (no bound)
+xl(3)   = ul;                    % Lower bound on state x3
+xu(3)   = uu;                    % Upper bound on state x3
+xu(2)   = 0.1;                   % Upper bound on travel speed
+xl(2)   = -0.1;                  % Lower bound on travel speed
 
 % Generate constraints on measurements and inputs
-[vlb,vub]       = genbegr2(N,M,xl,xu,ul,uu); % hint: genbegr2
-vlb(N*mx+M*mu)  = 0;                    % We want the last input to be zero
-vub(N*mx+M*mu)  = 0;                    % We want the last input to be zero
-vlb(N*mx+M*mu-1)  = 0;                  % We want the last input to be zero
-vub(N*mx+M*mu-1)  = 0;                  % We want the last input to be zero
+[vlb,vub]       = genbegr2(N,M,xl,xu,ul,uu);
+vlb(N*mx+M*mu)  = 0;             % We want the last input to be zero
+vub(N*mx+M*mu)  = 0;             % We want the last input to be zero
+vlb(N*mx+M*mu-1)  = 0;           % We want the last input to be zero
+vub(N*mx+M*mu-1)  = 0;           % We want the last input to be zero
 
 % Generate the matrix Q and the vector c (objecitve function weights in the QP problem)
 Q1 = zeros(mx,mx);
-Q1(1,1) = 1;                            % Weight on state x1
-Q1(2,2) = 0;                            % Weight on state x2
-Q1(3,3) = 0;                            % Weight on state x3
-Q1(4,4) = 0;                            % Weight on state x4
-Q1(5,5) = 0;                            % Weight on state x5
-Q1(6,6) = 0;                            % Weight on state x6
-P1 = diag([q1, q2]);                    % Weight on input
-Q = genq2(Q1,P1,N,M,mu);                % Generate Q
-c = zeros(N*mx+M*mu,1);                 % Generate c
+Q1(1,1) = 1;                     % Weight on state x1
+Q1(2,2) = 0;                     % Weight on state x2
+Q1(3,3) = 0;                     % Weight on state x3
+Q1(4,4) = 0;                     % Weight on state x4
+Q1(5,5) = 0;                     % Weight on state x5
+Q1(6,6) = 0;                     % Weight on state x6
+P1 = diag([q1, q2]);             % Weight on input
+Q = genq2(Q1,P1,N,M,mu);         % Generate Q
+c = zeros(N*mx+M*mu,1);          % Generate c
 
 fun = @(x) x'*Q*x;
 
 %% Generate system matrixes for linear model
-Aeq = gena2(A1,B1,N,mx,mu);           % Generate A, hint: gena2
-beq = zeros(mx*N,1);        	  % Generate b
-beq(1:mx) = A1*x0; % Initial value
+Aeq = gena2(A1,B1,N,mx,mu);      % Generate A, hint: gena2
+beq = zeros(mx*N,1);             % Generate b
+beq(1:mx) = A1*x0;               % Initial value
 
 %% Solve QP problem with linear model
-options = optimoptions(@fmincon,'MaxIter',50000,'MaxFunEvals',50000);
+options = optimoptions(@fmincon,'MaxIter',50000,'MaxFunEvals',50000); % The default maximum is too low so we had to turn it up
 tic;
 z = fmincon(fun,z0,[],[],Aeq,beq,vlb,vub,@nonlcon,options);
-% [z,lambda] = quadprog(Q,c,[],[],Aeq,beq,vlb,vub); % hint: quadprog
 t1=toc;
 
 % Calculate objective value
@@ -93,12 +94,12 @@ end
 u1  = [z(N*mx+1:2:N*mx+M*mu-1);z(N*mx+M*mu-1)]; % Control input from solution
 u2  = [z(N*mx+2:2:N*mx+M*mu);z(N*mx+M*mu)]; % Control input from solution
 
-x1 = [x0(1);z(1:mx:N*mx)];              % State x1 from solution
-x2 = [x0(2);z(2:mx:N*mx)];              % State x2 from solution
-x3 = [x0(3);z(3:mx:N*mx)];              % State x3 from solution
-x4 = [x0(4);z(4:mx:N*mx)];              % State x4 from solution
-x5 = [x0(5);z(5:mx:N*mx)];              % State x5 from solution
-x6 = [x0(6);z(6:mx:N*mx)];              % State x6 from solution
+x1 = [x0(1);z(1:mx:N*mx)];       % State x1 from solution
+x2 = [x0(2);z(2:mx:N*mx)];       % State x2 from solution
+x3 = [x0(3);z(3:mx:N*mx)];       % State x3 from solution
+x4 = [x0(4);z(4:mx:N*mx)];       % State x4 from solution
+x5 = [x0(5);z(5:mx:N*mx)];       % State x5 from solution
+x6 = [x0(6);z(6:mx:N*mx)];       % State x6 from solution
 
 num_variables = 5/delta_t;
 zero_padding = zeros(num_variables,1);
